@@ -1,0 +1,57 @@
+<html lang="es">
+    <head>
+        <title>Ecogram:Nuevo Articulo - Ecogram</title>
+        <style>
+            body{
+                background: linear-gradient(to bottom,#A8AAB3, white);
+            }
+            #titulo {
+                padding: 0.4% 1% 0.4% 1% ;
+            }
+            #escritura{
+                padding: 0.4% 1% 0.4% 1% ;
+            }
+            #imagen{
+                padding: 0.4% 1% 0.4% 1% ;
+            }
+        </style>
+        <link 
+        href="http://127.0.0.1:8000/media/images/Ecogram_HzREZXw.ico"
+        rel="shortcut icon"
+        />
+    </head>
+    <body>
+
+        <header>
+            {% extends 'Menu.html' %}
+        </header>
+
+        {% block content%}
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+    
+            <div id="titulo">
+                <h2 id="title">Título</h2>
+                {{form.title}}
+            </div>
+
+            <div id="escritura">
+                <h2>Descripción</h2>
+                {{form.description}}
+            </div>
+
+            <div id="imagen">
+                <h2>Imagen</h2>
+                <input type='file' name='image' required>
+            </div>
+
+            <button type="submit" class='btn btn-success'>Enviar Post</button>
+
+        </form>
+        
+        {% endblock %}
+        
+    </body>
+</html>      

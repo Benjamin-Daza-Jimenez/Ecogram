@@ -1,0 +1,76 @@
+<!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+  
+          <ul class="nav nav-pills nav-justified mb-3">
+            <li class="nav-item">
+              <a class="nav-link active show" data-mdb-toggle="pill" href="#navbarLogin-login" role="tab">
+                Iniciar sesión</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-mdb-toggle="pill" href="#navbarLogin-signup" role="tab">Registrarse</a>
+            </li>
+          </ul>
+  
+          <div class="tab-content" id="tab-content">
+            <div class="tab-pane fade show active" id="navbarLogin-login" role="tabpanel">
+              <form id="login" class="text-center" action="{% url 'users:login' %}" method="post">
+                {% csrf_token %}
+                <!-- Autenticar Correo -->
+                  <div class="form-outline form-auth-md mb-4">
+                    {{ loginForm.email }}
+                    <label class="form-label" style="margin-left: 0px;">Correo electrónico</label>
+                  </div>
+                <!-- Autenticar Contraseña -->
+                <div class="form-outline form-auth-md mb-4">
+                  {{ loginForm.password }}
+                  <label class="form-label" style="margin-left: 0px;">Contraseña</label>
+                </div>
+                <!-- Botón -->
+                <button type="submit" class="btn btn-primary btn-block mb-4">Iniciar</button>
+              </form>
+            </div>
+  
+  
+            <div class="tab-pane fade" id="navbarLogin-signup" role="tabpanel">
+              <form id="register" class="text-center" action="{% url 'users:signup'%}" method="post">
+                {% csrf_token %}
+                <div class="form-outline form-auth-mdb mb-4">
+                  {{ signupForm.email}}
+                  <label class="form-label" style="margin-left: 0px;">Correo electrónico</label>
+                </div>
+  
+                <div class="form-outline form-auth-mdb mb-4">
+                  {{ signupForm.first_name }}
+                  <label class="form-label" style="margin-left: 0px;">Nombre</label>
+                </div>
+  
+                <div class="form-outline form-auth-mdb mb-4">
+                  {{ signupForm.last_name }}
+                  <label class="form-label" style="margin-left: 0px;">Apellido</label>
+                </div>
+  
+                <div class="form-outline form-auth-mdb mb-4">
+                  {{ signupForm.password }}
+                  <label class="form-label" style="margin-left: 0px;">Contraseña
+                  </label>
+                </div>
+  
+                <div class="form-outline form-auth-mdb mb-4">
+                  {{ signupForm.password2 }}
+                  <label class="form-label" style="margin-left: 0px;">Repita la contraseña
+                  </label>
+  
+                </div>
+                <button class="btn btn-primary btn-block mb-3" type="submit">Registrar</button>
+              </form>
+  
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>

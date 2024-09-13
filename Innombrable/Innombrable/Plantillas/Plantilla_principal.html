@@ -1,0 +1,70 @@
+<html lang="es">
+    <head>
+        <style>
+            body{
+                background: linear-gradient(to bottom, #A8AAB3, white);
+            }
+            #pie {
+                margin: 3% 0% 1% 0%;
+                text-align: left;
+            }
+            .title {
+                text-align: left;
+
+            }
+        </style>
+        <link 
+        href="http://127.0.0.1:8000/media/images/Ecogram_HzREZXw.ico"
+        rel="shortcut icon"
+        />
+        <title>Ecogram</title>
+    </head>
+
+    <body>
+        <header>
+            
+            {% extends 'Menu.html' %}
+        </header>
+
+        {% block content %}
+        <div class='container col-md-8 col-x1-6'>
+            <h1 class='text-centr my-4'>Artículos</h1>
+
+            {% for post in posts %}
+            <div class="card mb-3">
+                <img
+                  src={{post.image.url}}
+                  class="card-img-top"
+                  alt="..."
+                />
+                <div class="card-body">
+                    <a href="{% url 'detalle_post' post.slug %}">
+                  <h5 class="card-title">{{post.title}}</h5>
+                    </a>
+                  <p class="card-text">
+                        {{post.description|linebreaks|slice:":640"}}<a>[...]</a>
+                  </p>
+                  <p class="card-text">
+                    <small class="text-muted">
+                        <a class="card-text">
+                            <i class='far fa-thumbs-up'> </i>
+                            {{post.cantidad_likes}}
+                        Likes</a>
+                        <a>|</a>
+                        <a href={{ post.author.get_absolute_url }}>{{post.author}}</a>
+                        <a>| {{post.published}}</a>
+                        {% if user.is_staff %}
+                        <a>|</a>
+                        <a href={% url 'borrar' post.identifier %}>Borrar</a>
+                        {% endif %}
+                    </small>
+                  </p>
+                </div>
+              </div>
+            {% endfor %}
+        </div>
+        
+        {% endblock %}
+        
+    </body>
+</html>

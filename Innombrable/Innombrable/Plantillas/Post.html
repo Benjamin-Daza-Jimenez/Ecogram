@@ -1,0 +1,291 @@
+<html>
+    <head>
+        
+        <style>
+            body{
+                background: linear-gradient(to bottom, #A8AAB3, white);
+            }
+            #titulo{
+                background: honeydew;
+                padding: 0.4% 1% 0.4% 1% ;
+                margin: 0.5% 1% 0.5% 1%;
+                text-align: center;
+            }
+            #descripcion{
+                background: honeydew;
+                padding: 2% 1% 2% 1% ;
+                margin: 0.5% 1% 0.5% 1%;
+            }
+            #imagen{
+                text-align: center;
+                background: honeydew;
+                padding: 2% 1% 2% 1% ;
+                margin: 0.5% 1% 0.5% 1%;
+            }
+            #imagen2{
+                max-height: 30%;
+                max-width: 90%;
+            }
+            #informacion{
+                background: honeydew;
+                margin: 0.5% 1% 0.5% 1%;
+                padding: 0.4% 1% 0.4% 1% ;
+            }
+
+        </style>
+    </head>
+    <body>
+        {% extends 'Menu.html' %}
+
+        {% block content %}
+            <div id="titulo">
+                <h5 class="card-title">{{posts.title}}</h5>
+            </div>
+            <div id="imagen">
+                <img id="imagen2" src="{{posts.image.url}}">
+            </div>
+            <div id="descripcion">
+                <p class="card-text">
+                    {{posts.description|linebreaks}}
+                </p>
+            </div>
+            <div id="informacion">
+                <p class="card-text">
+                    <small class="text-muted">
+                        {% if user.is_authenticated %}
+                        <form method="POST" action={% url 'network:like' posts.slug %} class="mt-2 px-2">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{request.path}}">
+                            <button type="submit" class='btn btn-primary'>
+                                Like
+                            </button>
+                        </form>
+                        {% endif %}
+                        <a class="card-text">
+                            <i class='far fa-thumbs-up'> </i>
+                            {{posts.cantidad_likes}}
+                        </a>
+                        <a>|</a>
+                        <a href={{ posts.author.get_absolute_url }}>{{posts.author}}</a>
+                        <a>|</a>
+                        <a style="float: right;">{{posts.published}}</a>
+                    </small>
+                </p>
+            </div>
+
+            {% comment %} <a href="#" class="w-1/3 flex space-x-2 justify-center items-center hover:bg-gray-100 dark:hover:bg-dark-third text-xl py-2 rounded-lg cursor-pointer text-gray-500 dark:text-dark-txt">
+                <i class='bx bx-bookmark-alt-plus'></i>
+                <span class="text-sm font-semibold">Bookmark</span>
+            </a> {% endcomment %}
+
+            <div @click="open = true" class="w-1/3 flex space-x-2 justify-center items-center hover:bg-gray-100 dark:hover:bg-dark-third text-xl py-2 rounded-lg cursor-pointer text-gray-500 dark:text-dark-txt">
+                <i class='bx bx-comment'></i>
+                <span class="text-sm font-semibold"></span>
+            </div>
+
+            <!--COMMENT MODAL-->
+            {% if user.is_authenticated %}
+            <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click.away="open = false" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                
+                <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-description="Background overlay, show/hide based on modal state." class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="open = false" aria-hidden="true"></div>
+
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+
+                <div class="inline-block align-bottom dark:bg-dark-second bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
+                    
+                    <div>
+                        
+                        <div class="mt-3 text-center sm:mt-5">
+                            <h3 class="text-lg leading-6 font-medium dark:text-dark-txt text-gray-900" id="modal-title">
+                            Comenta
+                            </h3>
+                            <div class="mt-2">
+                            <p class="text-sm dark:text-dark-txt text-gray-500">
+                                Comparte tu opinión 
+                            </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3">
+                        
+                        <div class="mt-5 sm:mt-6 ">
+                            {% comment %} <label class="block text-sm font-medium dark:text-dark-txt text-gray-700">
+                                Body
+                            </label> {% endcomment %}
+                            <form method="POST" class="inline-flex">
+                                {% csrf_token %}
+                                {{form.comment}}
+                                <div class="block">
+                                    <button type="submit" class="btn-primary inline-flex items-center ml-1 px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Enviar
+                                    </button>
+                                </div>
+                            </form>
+                            
+
+                        </div>
+
+                    </div>
+                    <!-- Add more Grid-cols-3 -->
+
+                </div>
+
+
+                </div>
+            </div>
+            {% endif %}
+            <!-- COMMENT POST MODAL -->
+
+
+            
+            <!-- LIST COMMENT -->
+            <div class="py-2 px-4 max-w-full">
+                <!-- COMMENT -->
+                {% load humanize %}
+                {% for comment in comments %}
+                {% if comment.is_parent %}
+                <div style="margin-top: 0.5%; margin-bottom: 0.5%; padding: 1%; border: 1px solid black ;" class="flex space-x-2">
+                    <a href="{% url 'users:user_detail' comment.author.slug %}">
+
+                    </a>
+                    <div>
+                        <div style="border: 2px dashed black; margin-top: 0.3%; padding: 0,2%;">
+                        <div class="bg-gray-100 dark:bg-dark-third p-2 rounded-2xl text-sm">
+                            <h5>
+                            <a href="{% url 'users:user_detail' comment.author.slug %}" class="font-semibold block hover:text-blue-500 dark:text-dark-txt"><p><h3>{{comment.author}}</h3></p></a>
+                            <span class="dark:text-dark-txt">{{comment.comment}}</span>
+                            </h5>
+                        </div>
+
+                        <div x-data="{open:false}" class=" text-xs text-gray-500 dark:text-dark-txt">
+                            
+                            <form method="POST" action="{% url 'network:comment-like' posts.slug comment.pk %}" class="pl-2 inline-flex">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{request.path}}">
+                                {% if user.is_authenticated %}
+                                <button type="submit" button type="submit" class='btn btn-primary'>
+                                    Like
+                                </button> 
+                                {% endif %}
+                                <a class="card-text">
+                                    <i class='far fa-thumbs-up'> </i>
+                                    {{comment.likes.all.count}}
+                                </a>
+                                {% if request.user == comment.author %}
+                                <a href="{% url 'network:comment-delete' posts.slug comment.pk %}" class="btn btn-danger font-semibold cursor-pointer">Borrar</a>
+                                {% elif user.is_staff %}
+                                <a href="{% url 'network:comment-delete' posts.slug comment.pk %}" class="btn btn-danger font-semibold cursor-pointer">Borrar</a>
+                                
+                                {% endif %}
+                            </form>
+                            <span class="text-xs dark:text-dark-txt text-gray-500 float-right">{{comment.created_on | naturaltime}}</span>
+                            <!-- This example requires Tailwind CSS v2.0+ -->
+                            {% if user.is_authenticated %}
+                            <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click.away="open = false" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                                <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+
+                                    <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-description="Background overlay, show/hide based on modal state." class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="open = false" aria-hidden="true"></div>
+
+
+                                    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                                    <div class="inline-block align-bottom dark:bg-dark-second dark:text-dark-txt bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
+                                    <div>
+                                        
+                                        <div class="mt-3 text-center sm:mt-5">
+                                        <h3 class="text-lg leading-6 font-medium dark:text-dark-txt text-gray-900" id="modal-title">
+                                            Responder al comentario
+                                        </h3>
+                                        <div class="mt-2">
+                                            <p class="text-sm text-gray-500 dark:text-dark-txt">
+                                            Responde al comentario
+                                            </p>
+                                        </div>
+                                        
+                                        <div class="mt-5 sm:mt-6 ">
+                                        {% comment %} <label class="block text-sm font-medium dark:text-dark-txt text-gray-700">
+                                            Cuerpo
+                                        </label> {% endcomment %}
+                                        <form method="POST" action="{% url 'network:comment-reply' posts.slug comment.pk %}" class="inline-flex">
+                                            {% csrf_token %}
+                                            {{form.comment}}
+                                            <div class="block">
+                                                <button type="submit" class="inline-flex items-center ml-1 px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                Postear
+                                                </button>
+                                            </div>
+                                        </form>
+                                        
+
+                                    </div>
+
+                                    </div>
+                                    </div>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            
+                            
+                        </div>
+                        </div>
+                        <!-- REPLY COMMENT -->
+                        {% for child_comment in comment.children %}
+                        <div style="border: 2px dashed black; margin-top: 0.3%;" class="flex space-x-2">
+                            <a href="{% url 'users:user_detail' child_comment.author.slug %}">
+                            
+                            </a>
+                            <div>
+                                <div class="bg-gray-100 dark:bg-dark-third p-2 rounded-2xl text-sm">
+                                    <a href="{% url 'users:user_detail' child_comment.author.slug %}" class="font-semibold block hover:text-blue-500 dark:text-dark-txt"><p>{{child_comment.author}}</p></a>
+                                    <span class="dark:text-dark-txt">{{child_comment.comment}}</span>
+                                </div>
+                                <div class="p-2 text-xs text-gray-500 dark:text-dark-txt">
+                                    <small class="text-muted">
+                                        
+                                        <form method="POST" action="{% url 'network:comment-like' posts.slug child_comment.pk %}" class="pl-2 inline-flex">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="next" value="{{request.path}}">
+                                            {% if user.is_authenticated %}
+                                            <button type="submit" button type="submit" class='btn btn-primary'>
+                                                Like
+                                            </button>
+                                            {% endif %}
+                                            <a class="card-text">
+                                                <i class='far fa-thumbs-up'> </i>
+                                                {{child_comment.likes.all.count}}
+                                            </a>
+                                            {% if request.user == child_comment.author %}
+                                            <a href="{% url 'network:comment-delete' posts.slug child_comment.pk %}" class="btn btn-danger font-semibold cursor-pointer">Borrar</a>
+                                            {% elif user.is_staff %}
+                                            <a href="{% url 'network:comment-delete' posts.slug child_comment.pk %}" class="btn btn-danger font-semibold cursor-pointer">Borrar</a>
+                                            {% endif %}   
+                                        </form>
+                                        <span class="text-xs dark:text-dark-txt text-gray-500 float-right">{{child_comment.created_on | naturaltime}}</span>
+
+                                    </small>
+                                </div>
+                            </div>
+                        </div> 
+                        {% endfor %}
+                        
+                        <!-- END REPLY COMMENT -->
+
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                
+                <!-- END COMMENT -->
+
+            </div>
+            <!-- END LIST COMMENT -->
+        {% endblock %}
+    </body>
+
+</html>

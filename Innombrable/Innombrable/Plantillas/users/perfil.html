@@ -1,0 +1,44 @@
+{% extends "Menu.html" %}
+{% block content %}
+<div class='container d-flex justify-content-center mt-5 col-md-10 col-xl-8'>
+  <div class="card shadow-4-strong mb-3">
+    <div class="row g-0">
+      <div class="col-md-5">
+        <img src={{ user.profile_pic.url }} alt="..." class="img-fluid rounded" />
+      </div>
+      <div class="col-md-7">
+        <div class="card-body">
+          <div class='row justify-content-center'>
+            <h4 class="col-12 card-title text-center mb-4">{{ user.first_name}} {{ user.last_name}}</h4>
+            <p class="col-4 text-center mb-0">Publicaciones</p>
+            <p class="col-4 text-center mb-0">Seguidores</p>
+            <p class="col-4 text-center mb-0">Siguiendo</p>
+
+            <p class="col-4 text-center"><strong>{{ user.count_posts }}</strong></p>
+            <p class="col-4 text-center"><strong>{{ user.followers.all|length }}</strong></p>
+            <p class="col-4 text-center"><strong>{{ user.count_following }}</strong></p>
+
+
+            <p class="card-text text-center mb-5">{{ user.bio }}</p>
+      
+            <p align='center'>
+              <form method='POST' enctype="multipart/form-data" action="{%url 'users:changes' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="file" name="profile_pic">
+                <button type="submit" class="save btn btn-primary">Enviar</button>
+              </form>
+            </p>
+            <a class='btn btn-danger btn-rounded col-5' href={% url 'users:logout'%}>
+              Cerrar sesión
+            </a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
